@@ -1,9 +1,11 @@
 import NodeID3 from "node-id3";
+import path from "path";
 
 export const getAudio = async (req, res) => {
     try {
         // извлекаем название песни (в будущем можно будет проработать это)
         const { songName } = req.params;
+
         // получение мета-данных об аудио
         const audio = await NodeID3.read(`./uploads/${songName}.mp3`);
 
@@ -19,3 +21,16 @@ export const getAudio = async (req, res) => {
         });
     }
 };
+
+// используем отдельную функцию для проверки расширения файла ДО его сохранения
+export const fileFilter = (req, file, cb) => {
+    // допустимые расширения
+    const allowedExtensions = ['.mp3', '.wav', '.vma', '.flac', '.mid', '.midi']
+    const ext = path.extname(file.originalname).toLowerCase()
+
+    if (allowedExtensions.includes(ext)) {
+        cb(null, true) // отправляем файл далее на сохранение
+    } else {
+        cb(new Error('Недопустимое расширение файла'), false) // отклоняем, создавая ошибку
+    }
+}
