@@ -15,7 +15,7 @@ export const getAudio = async (req, res) => {
 
         return res.status(200).json({ audio })
     } catch (err) {
-        console.log(err);
+        console.log(err)
         res.status(500).json({
             message: "Error while getting audio",
         })
